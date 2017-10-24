@@ -23,7 +23,9 @@ export class Logger<M, A> implements FantasyContravariant<URI, A> {
   }
 }
 
-export const contramap = <M, A>(fa: Logger<M, A>) => <B>(f: (b: B) => A): Logger<M, B> => fa.contramap(f)
+export const contramap = <M, A, B>(f: (b: B) => A, fa: Logger<M, A>): Logger<M, B> => {
+  return fa.contramap(f)
+}
 
 export const getSemigroup = <M>(M: Apply<M>): (<A>() => Semigroup<Logger<M, A>>) => {
   const applySecondM = applySecond(M)
@@ -44,26 +46,22 @@ export const getMonoid = <M>(M: Applicative<M>): (<A>() => Monoid<Logger<M, A>>)
 /** Transform the `Logger` such that it ignores records for which the predicate returns `false` */
 export const filter = <M>(M: Applicative<M>): (<A>(logger: Logger<M, A>) => (p: Predicate<A>) => Logger<M, A>) => {
   const whenM = when(M)
-  return logger => p => new Logger(a => whenM(p(a))(logger.run(a)))
+  return logger => p => new Logger(a => whenM(p(a), logger.run(a)))
 }
 
 /** Apply a natural transformation to the underlying functor */
-export const hoist = <M1, M2>(nt: NaturalTransformation<M1, M2>) => <A>(logger: Logger<M1, A>): Logger<M2, A> =>
-  new Logger(a => nt(logger.run(a)))
-
-export class Ops {
-  /** Log a record to the logger */
-  log<M extends HKT3S, A>(logger: Logger<M, A>): <U, L>(a: A) => HKT3As<M, U, L, void>
-  log<M extends HKT2S, A>(logger: Logger<M, A>): <L>(a: A) => HKT2As<M, L, void>
-  log<M extends HKTS, A>(logger: Logger<M, A>): (a: A) => HKTAs<M, void>
-  log<M, A>(logger: Logger<M, A>): (a: A) => HKT<M, void>
-  log<M, A>(logger: Logger<M, A>): (a: A) => HKT<M, void> {
-    return a => logger.run(a)
-  }
+export const hoist = <M1, M2>(nt: NaturalTransformation<M1, M2>) => <A>(logger: Logger<M1, A>): Logger<M2, A> => {
+  return new Logger(a => nt(logger.run(a)))
 }
 
-const ops = new Ops()
-export const log: Ops['log'] = ops.log
+/** Log a record to the logger */
+export function log<M extends HKT3S, A>(logger: Logger<M, A>): <U, L>(a: A) => HKT3As<M, U, L, void>
+export function log<M extends HKT2S, A>(logger: Logger<M, A>): <L>(a: A) => HKT2As<M, L, void>
+export function log<M extends HKTS, A>(logger: Logger<M, A>): (a: A) => HKTAs<M, void>
+export function log<M, A>(logger: Logger<M, A>): (a: A) => HKT<M, void>
+export function log<M, A>(logger: Logger<M, A>): (a: A) => HKT<M, void> {
+  return a => logger.run(a)
+}
 
 export const logger: Contravariant<URI> = {
   URI,
