@@ -1,9 +1,81 @@
 import * as assert from 'assert'
-import { Logger, filter, getSemigroup, log } from '../src/'
-import * as io from 'fp-ts/lib/IO'
+import { Logger, filter, getSemigroup, getMonoid, log, hoist } from '../src/'
+import { IO, URI as IOURI, io } from 'fp-ts/lib/IO'
+import { URI as TaskURI, fromIO } from 'fp-ts/lib/Task'
 
-describe('getSemigroup', () => {
-  it('should concat two loggers', () => {
+describe('Logger', () => {
+  it('contramap', () => {
+    const ledger: Array<number> = []
+    const ledgerLogger = new Logger<IOURI, number>(
+      a =>
+        new IO(() => {
+          ledger.push(a)
+        })
+    )
+    const testLogger = ledgerLogger.contramap((s: string) => s.length)
+    log(testLogger)('a').run()
+    assert.deepEqual(ledger, [1])
+  })
+
+  it('getSemigroup', () => {
+    const ledger: Array<string> = []
+    const S = getSemigroup(io)<string>()
+    const ledgerLogger = new Logger<IOURI, string>(
+      a =>
+        new IO(() => {
+          ledger.push(a)
+        })
+    )
+    const testLogger = S.concat(ledgerLogger, ledgerLogger)
+    log(testLogger)('a').run()
+    assert.deepEqual(ledger, ['a', 'a'])
+  })
+
+  it('getMonoid', () => {
+    const ledger: Array<string> = []
+    const M = getMonoid(io)<string>()
+    const ledgerLogger = new Logger<IOURI, string>(
+      a =>
+        new IO(() => {
+          ledger.push(a)
+        })
+    )
+    const testLogger = M.concat(ledgerLogger, M.empty)
+    log(testLogger)('a').run()
+    assert.deepEqual(ledger, ['a'])
+  })
+
+  it('filter', () => {
+    const ledger: Array<string> = []
+    const ledgerLogger = new Logger<IOURI, string>(
+      a =>
+        new IO(() => {
+          ledger.push(a)
+        })
+    )
+    const testLogger = filter(io)(ledgerLogger, a => a.length > 2)
+    const testLog = log(testLogger)
+    testLog('a').run()
+    testLog('aaa').run()
+    assert.deepEqual(ledger, ['aaa'])
+  })
+
+  it('hoist', () => {
+    const ledger: Array<string> = []
+    const ledgerLogger = new Logger<IOURI, string>(
+      a =>
+        new IO(() => {
+          ledger.push(a)
+        })
+    )
+    const testLogger = hoist<IOURI, TaskURI>(fromIO)(ledgerLogger)
+    const testLog = log(testLogger)
+    return Promise.all([testLog('a').run()]).then(() => {
+      assert.deepEqual(ledger, ['a'])
+    })
+  })
+
+  it('example', () => {
     const mock: Array<string> = []
     type Level = 'Debug' | 'Info' | 'Warning' | 'Error'
 
@@ -15,25 +87,25 @@ describe('getSemigroup', () => {
 
     const format = (date: Date): string => `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`
 
-    const fileLogger = (path: string): Logger<io.URI, Entry> =>
+    const fileLogger = (path: string): Logger<IOURI, Entry> =>
       new Logger(
         ({ level, time, message }) =>
-          new io.IO(() => {
+          new IO(() => {
             mock.push(`${path}: [${level}] ${format(time)} ${message}`)
           })
       )
 
     const filterIO = filter(io)
-    const debugLogger = filterIO(fileLogger('debug.log'))(e => e.level === 'Debug')
-    const productionLogger = filterIO(fileLogger('production.log'))(e => e.level !== 'Debug')
+    const debugLogger = filterIO(fileLogger('debug.log'), e => e.level === 'Debug')
+    const productionLogger = filterIO(fileLogger('production.log'), e => e.level !== 'Debug')
 
-    const logger = getSemigroup(io)<Entry>().concat(debugLogger)(productionLogger)
+    const logger = getSemigroup(io)<Entry>().concat(debugLogger, productionLogger)
     const logIO = log(logger)
 
     const info = (message: string) => (time: Date) => logIO({ message, time, level: 'Info' })
     const debug = (message: string) => (time: Date) => logIO({ message, time, level: 'Debug' })
 
-    const now = new io.IO(() => new Date(1970, 10, 30))
+    const now = new IO(() => new Date(1970, 10, 30))
 
     const program = now
       .chain(info('boot'))
