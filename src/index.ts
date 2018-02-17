@@ -1,69 +1,106 @@
-import { HKT, HKTS, HKTAs, HKT2S, HKT2As, HKT3S, HKT3As } from 'fp-ts/lib/HKT'
-import { Contravariant, FantasyContravariant } from 'fp-ts/lib/Contravariant'
-import { Apply, applySecond } from 'fp-ts/lib/Apply'
+import { HKT, URIS, URIS2, URIS3, Type, Type2, Type3 } from 'fp-ts/lib/HKT'
+import { Contravariant2 } from 'fp-ts/lib/Contravariant'
+import { Apply, Apply1, Apply2, Apply3, applySecond } from 'fp-ts/lib/Apply'
 import { Semigroup } from 'fp-ts/lib/Semigroup'
-import { Applicative, when } from 'fp-ts/lib/Applicative'
+import { Applicative, Applicative1, Applicative2, Applicative3, when } from 'fp-ts/lib/Applicative'
 import { Monoid } from 'fp-ts/lib/Monoid'
 import { Predicate } from 'fp-ts/lib/function'
-import { NaturalTransformation } from 'fp-ts/lib/NaturalTransformation'
 
 // Adapted from https://github.com/rightfold/purescript-logging
+
+declare module 'fp-ts/lib/HKT' {
+  interface URI2HKT2<L, A> {
+    Logger: Logger<L, A>
+  }
+}
 
 export const URI = 'Logger'
 
 export type URI = typeof URI
 
 /** A logger receives records and potentially performs some effects */
-export class Logger<M, A> implements FantasyContravariant<URI, A> {
-  readonly _A: A
-  readonly _URI: URI
+export class Logger<M, A> {
+  // prettier-ignore
+  readonly '_A': A
+  // prettier-ignore
+  readonly '_L': M
+  // prettier-ignore
+  readonly '_URI': URI
   constructor(readonly run: (a: A) => HKT<M, void>) {}
   contramap<B>(f: (b: B) => A): Logger<M, B> {
     return new Logger(b => this.run(f(b)))
   }
 }
 
-export const contramap = <M, A, B>(f: (b: B) => A, fa: Logger<M, A>): Logger<M, B> => {
+const contramap = <M, A, B>(fa: Logger<M, A>, f: (b: B) => A): Logger<M, B> => {
   return fa.contramap(f)
 }
 
-export const getSemigroup = <M>(M: Apply<M>): (<A>() => Semigroup<Logger<M, A>>) => {
+export function getSemigroup<M extends URIS3>(M: Apply3<M>): (<A = never>() => Semigroup<Logger<M, A>>)
+export function getSemigroup<M extends URIS2>(M: Apply2<M>): (<A = never>() => Semigroup<Logger<M, A>>)
+export function getSemigroup<M extends URIS>(M: Apply1<M>): (<A = never>() => Semigroup<Logger<M, A>>)
+export function getSemigroup<M>(M: Apply<M>): (<A = never>() => Semigroup<Logger<M, A>>)
+export function getSemigroup<M>(M: Apply<M>): (<A = never>() => Semigroup<Logger<M, A>>) {
   const applySecondM = applySecond(M)
   return () => ({
-    concat: x => y => new Logger(a => applySecondM(x.run(a))(y.run(a)))
+    concat: (x, y) => new Logger(a => applySecondM(x.run(a), y.run(a)))
   })
 }
 
-export const getMonoid = <M>(M: Applicative<M>): (<A>() => Monoid<Logger<M, A>>) => {
+export function getMonoid<M extends URIS3>(M: Applicative3<M>): (<A = never>() => Monoid<Logger<M, A>>)
+export function getMonoid<M extends URIS2>(M: Applicative2<M>): (<A = never>() => Monoid<Logger<M, A>>)
+export function getMonoid<M extends URIS>(M: Applicative1<M>): (<A = never>() => Monoid<Logger<M, A>>)
+export function getMonoid<M>(M: Applicative<M>): (<A = never>() => Monoid<Logger<M, A>>)
+export function getMonoid<M>(M: Applicative<M>): (<A = never>() => Monoid<Logger<M, A>>) {
   const S = getSemigroup(M)<any>()
   const empty = new Logger<M, any>(() => M.of(undefined))
   return () => ({
     ...S,
-    empty: () => empty
+    empty
   })
 }
 
 /** Transform the `Logger` such that it ignores records for which the predicate returns `false` */
-export const filter = <M>(M: Applicative<M>): (<A>(logger: Logger<M, A>) => (p: Predicate<A>) => Logger<M, A>) => {
+export function filter<M extends URIS3>(
+  M: Applicative3<M>
+): (<A>(logger: Logger<M, A>, predicate: Predicate<A>) => Logger<M, A>)
+export function filter<M extends URIS2>(
+  M: Applicative2<M>
+): (<A>(logger: Logger<M, A>, predicate: Predicate<A>) => Logger<M, A>)
+export function filter<M extends URIS>(
+  M: Applicative1<M>
+): (<A>(logger: Logger<M, A>, predicate: Predicate<A>) => Logger<M, A>)
+export function filter<M>(M: Applicative<M>): (<A>(logger: Logger<M, A>, predicate: Predicate<A>) => Logger<M, A>)
+export function filter<M>(M: Applicative<M>): (<A>(logger: Logger<M, A>, predicate: Predicate<A>) => Logger<M, A>) {
   const whenM = when(M)
-  return logger => p => new Logger(a => whenM(p(a), logger.run(a)))
+  return (logger, predicate) => new Logger(a => whenM(predicate(a), logger.run(a)))
 }
 
 /** Apply a natural transformation to the underlying functor */
-export const hoist = <M1, M2>(nt: NaturalTransformation<M1, M2>) => <A>(logger: Logger<M1, A>): Logger<M2, A> => {
-  return new Logger(a => nt(logger.run(a)))
+export function hoist<F extends URIS3, G extends URIS3>(
+  nt: <U, L, A>(fa: Type3<F, U, L, A>) => Type3<G, U, L, A>
+): <A>(logger: Logger<F, A>) => Logger<G, A>
+export function hoist<F extends URIS2, G extends URIS2>(
+  nt: <L, A>(fa: Type2<F, L, A>) => Type2<G, L, A>
+): <A>(logger: Logger<F, A>) => Logger<G, A>
+export function hoist<F extends URIS, G extends URIS>(
+  nt: <A>(fa: Type<F, A>) => Type<G, A>
+): <A>(logger: Logger<F, A>) => Logger<G, A>
+export function hoist<F, G>(nt: <A>(fa: HKT<F, A>) => HKT<G, A>): <A>(logger: Logger<F, A>) => Logger<G, A>
+export function hoist<F, G>(nt: <A>(fa: HKT<F, A>) => HKT<G, A>): <A>(logger: Logger<F, A>) => Logger<G, A> {
+  return logger => new Logger(a => nt(logger.run(a)))
 }
 
 /** Log a record to the logger */
-export function log<M extends HKT3S, A>(logger: Logger<M, A>): <U, L>(a: A) => HKT3As<M, U, L, void>
-export function log<M extends HKT2S, A>(logger: Logger<M, A>): <L>(a: A) => HKT2As<M, L, void>
-export function log<M extends HKTS, A>(logger: Logger<M, A>): (a: A) => HKTAs<M, void>
+export function log<M extends URIS3, A>(logger: Logger<M, A>): <U, L>(a: A) => Type3<M, U, L, void>
+export function log<M extends URIS2, A>(logger: Logger<M, A>): <L>(a: A) => Type2<M, L, void>
+export function log<M extends URIS, A>(logger: Logger<M, A>): (a: A) => Type<M, void>
 export function log<M, A>(logger: Logger<M, A>): (a: A) => HKT<M, void>
 export function log<M, A>(logger: Logger<M, A>): (a: A) => HKT<M, void> {
   return a => logger.run(a)
 }
 
-export const logger: Contravariant<URI> = {
+export const logger: Contravariant2<URI> = {
   URI,
   contramap
 }
