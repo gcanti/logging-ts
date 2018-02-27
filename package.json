@@ -2,16 +2,16 @@
   "name": "logging-ts",
   "version": "0.1.0",
   "description": "Composable loggers for TypeScript",
-  "files": [
-    "lib"
-  ],
+  "files": ["lib"],
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",
   "scripts": {
     "lint": "tslint src/**/*.ts test/**/*.ts",
     "mocha": "TS_NODE_CACHE=false mocha -r ts-node/register test/*.ts",
-    "prettier": "prettier --no-semi --single-quote --print-width 120 --parser typescript --list-different \"{src,test}/**/*.ts\"",
-    "fix-prettier": "prettier --no-semi --single-quote --print-width 120 --parser typescript --write \"{src,test}/**/*.ts\"",
+    "prettier":
+      "prettier --no-semi --single-quote --print-width 120 --parser typescript --list-different \"{src,test}/**/*.ts\"",
+    "fix-prettier":
+      "prettier --no-semi --single-quote --print-width 120 --parser typescript --write \"{src,test}/**/*.ts\"",
     "test": "npm run prettier && npm run lint && npm run mocha",
     "clean": "rm -rf lib/*",
     "build": "npm run clean && tsc"
@@ -33,22 +33,12 @@
     "@types/mocha": "2.2.38",
     "@types/node": "8.0.19",
     "mocha": "3.2.0",
-    "prettier": "^1.8.2",
+    "prettier": "^1.11.0",
     "ts-node": "3.3.0",
     "tslint": "4.4.2",
     "tslint-config-standard": "4.0.0",
     "typescript": "^2.7.1"
   },
-  "tags": [
-    "typescript",
-    "logging",
-    "functional-programming",
-    "fp-ts"
-  ],
-  "keywords": [
-    "typescript",
-    "logging",
-    "functional-programming",
-    "fp-ts"
-  ]
+  "tags": ["typescript", "logging", "functional-programming", "fp-ts"],
+  "keywords": ["typescript", "logging", "functional-programming", "fp-ts"]
 }
