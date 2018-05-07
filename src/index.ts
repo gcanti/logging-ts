@@ -1,9 +1,9 @@
-import { HKT, URIS, URIS2, URIS3, Type, Type2, Type3 } from 'fp-ts/lib/HKT'
-import { Contravariant2 } from 'fp-ts/lib/Contravariant'
-import { Apply, Apply1, Apply2, Apply3, applySecond } from 'fp-ts/lib/Apply'
-import { Semigroup } from 'fp-ts/lib/Semigroup'
 import { Applicative, Applicative1, Applicative2, Applicative3, when } from 'fp-ts/lib/Applicative'
+import { Apply, Apply1, Apply2, Apply3, applySecond } from 'fp-ts/lib/Apply'
+import { Contravariant2 } from 'fp-ts/lib/Contravariant'
+import { HKT, Type, Type2, Type3, URIS, URIS2, URIS3 } from 'fp-ts/lib/HKT'
 import { Monoid } from 'fp-ts/lib/Monoid'
+import { Semigroup } from 'fp-ts/lib/Semigroup'
 import { Predicate } from 'fp-ts/lib/function'
 
 // Adapted from https://github.com/rightfold/purescript-logging
@@ -20,12 +20,9 @@ export type URI = typeof URI
 
 /** A logger receives records and potentially performs some effects */
 export class Logger<M, A> {
-  // prettier-ignore
-  readonly '_A': A
-  // prettier-ignore
-  readonly '_L': M
-  // prettier-ignore
-  readonly '_URI': URI
+  readonly _A!: A
+  readonly _L!: M
+  readonly _URI!: URI
   constructor(readonly run: (a: A) => HKT<M, void>) {}
   contramap<B>(f: (b: B) => A): Logger<M, B> {
     return new Logger(b => this.run(f(b)))

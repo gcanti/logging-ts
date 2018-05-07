@@ -6,7 +6,7 @@
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",
   "scripts": {
-    "lint": "tslint src/**/*.ts test/**/*.ts",
+    "lint": "tslint -p tsconfig.json src/**/*.ts test/**/*.ts",
     "mocha": "TS_NODE_CACHE=false mocha -r ts-node/register test/*.ts",
     "prettier":
       "prettier --no-semi --single-quote --print-width 120 --parser typescript --list-different \"{src,test}/**/*.ts\"",
@@ -33,11 +33,11 @@
     "@types/mocha": "2.2.38",
     "@types/node": "8.0.19",
     "mocha": "3.2.0",
-    "prettier": "^1.11.0",
+    "prettier": "1.11.1",
     "ts-node": "3.3.0",
-    "tslint": "4.4.2",
-    "tslint-config-standard": "4.0.0",
-    "typescript": "^2.7.1"
+    "tslint": "5.9.1",
+    "tslint-config-standard": "7.0.0",
+    "typescript": "2.8.3"
   },
   "tags": ["typescript", "logging", "functional-programming", "fp-ts"],
   "keywords": ["typescript", "logging", "functional-programming", "fp-ts"]
