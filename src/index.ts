@@ -29,10 +29,6 @@ export class Logger<M, A> {
   }
 }
 
-const contramap = <M, A, B>(fa: Logger<M, A>, f: (b: B) => A): Logger<M, B> => {
-  return fa.contramap(f)
-}
-
 export function getSemigroup<M extends URIS3>(M: Apply3<M>): (<A = never>() => Semigroup<Logger<M, A>>)
 export function getSemigroup<M extends URIS2>(M: Apply2<M>): (<A = never>() => Semigroup<Logger<M, A>>)
 export function getSemigroup<M extends URIS>(M: Apply1<M>): (<A = never>() => Semigroup<Logger<M, A>>)
@@ -95,6 +91,10 @@ export function log<M extends URIS, A>(logger: Logger<M, A>): (a: A) => Type<M, 
 export function log<M, A>(logger: Logger<M, A>): (a: A) => HKT<M, void>
 export function log<M, A>(logger: Logger<M, A>): (a: A) => HKT<M, void> {
   return a => logger.run(a)
+}
+
+const contramap = <M, A, B>(fa: Logger<M, A>, f: (b: B) => A): Logger<M, B> => {
+  return fa.contramap(f)
 }
 
 export const logger: Contravariant2<URI> = {

@@ -1,5 +1,5 @@
 import * as assert from 'assert'
-import { Logger, filter, getSemigroup, getMonoid, log, hoist } from '../src/'
+import { Logger, filter, getSemigroup, getMonoid, log, hoist, logger } from '../src/'
 import { IO, URI as IOURI, io } from 'fp-ts/lib/IO'
 import { URI as TaskURI, fromIO } from 'fp-ts/lib/Task'
 
@@ -12,7 +12,7 @@ describe('Logger', () => {
           ledger.push(a)
         })
     )
-    const testLogger = ledgerLogger.contramap((s: string) => s.length)
+    const testLogger = logger.contramap(ledgerLogger, (s: string) => s.length)
     log(testLogger)('a').run()
     assert.deepEqual(ledger, [1])
   })
