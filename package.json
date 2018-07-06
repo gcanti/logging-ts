@@ -2,17 +2,17 @@
   "name": "logging-ts",
   "version": "0.1.0",
   "description": "Composable loggers for TypeScript",
-  "files": ["lib"],
+  "files": [
+    "lib"
+  ],
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",
   "scripts": {
     "lint": "tslint -p tsconfig.json src/**/*.ts test/**/*.ts",
-    "mocha": "TS_NODE_CACHE=false mocha -r ts-node/register test/*.ts",
-    "prettier":
-      "prettier --no-semi --single-quote --print-width 120 --parser typescript --list-different \"{src,test}/**/*.ts\"",
-    "fix-prettier":
-      "prettier --no-semi --single-quote --print-width 120 --parser typescript --write \"{src,test}/**/*.ts\"",
-    "test": "npm run prettier && npm run lint && npm run mocha",
+    "jest": "jest",
+    "prettier": "prettier --no-semi --single-quote --print-width 120 --parser typescript --list-different \"{src,test}/**/*.ts\"",
+    "fix-prettier": "prettier --no-semi --single-quote --print-width 120 --parser typescript --write \"{src,test}/**/*.ts\"",
+    "test": "npm run prettier && npm run lint && npm run jest",
     "clean": "rm -rf lib/*",
     "build": "npm run clean && tsc"
   },
@@ -27,18 +27,54 @@
   },
   "homepage": "https://github.com/gcanti/logging-ts",
   "dependencies": {
-    "fp-ts": "^1.0.1"
+    "fp-ts": "^1.7.0"
   },
   "devDependencies": {
-    "@types/mocha": "2.2.38",
+    "@types/jest": "^22.2.2",
     "@types/node": "8.0.19",
-    "mocha": "3.2.0",
-    "prettier": "1.11.1",
+    "jest": "^22.4.3",
+    "prettier": "^1.13.7",
+    "ts-jest": "^22.4.2",
     "ts-node": "3.3.0",
     "tslint": "5.9.1",
     "tslint-config-standard": "7.0.0",
-    "typescript": "2.8.3"
+    "typescript": "^2.9.2"
   },
-  "tags": ["typescript", "logging", "functional-programming", "fp-ts"],
-  "keywords": ["typescript", "logging", "functional-programming", "fp-ts"]
+  "tags": [
+    "typescript",
+    "logging",
+    "functional-programming",
+    "fp-ts"
+  ],
+  "keywords": [
+    "typescript",
+    "logging",
+    "functional-programming",
+    "fp-ts"
+  ],
+  "jest": {
+    "globals": {
+      "ts-jest": {
+        "skipBabel": true
+      }
+    },
+    "collectCoverage": true,
+    "transform": {
+      "^.+\\.tsx?$": "ts-jest"
+    },
+    "testRegex": "test",
+    "moduleFileExtensions": [
+      "ts",
+      "js"
+    ],
+    "testPathIgnorePatterns": [],
+    "coverageThreshold": {
+      "global": {
+        "branches": 100,
+        "functions": 100,
+        "lines": 100,
+        "statements": 0
+      }
+    }
+  }
 }
