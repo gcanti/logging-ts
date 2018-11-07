@@ -11,9 +11,10 @@ From `purescript-logging`'s README
 > (for transforming records) and `filter` (for filtering records). An example use case might be the following:
 
 ```ts
-import { IO, io } from 'fp-ts/lib/IO'
+import { io } from 'fp-ts/lib/IO'
 import * as L from 'logging-ts'
 import * as C from 'fp-ts/lib/Console'
+import * as D from 'fp-ts/lib/Date'
 
 type Level = 'Debug' | 'Info' | 'Warning' | 'Error'
 
@@ -39,11 +40,9 @@ const log = L.log(logger)
 const info = (message: string) => (time: Date) => log({ message, time, level: 'Info' })
 const debug = (message: string) => (time: Date) => log({ message, time, level: 'Debug' })
 
-const now = new IO(() => new Date())
-
-const program = now
+const program = D.create
   .chain(info('boot'))
-  .chain(() => now)
+  .chain(() => D.create)
   .chain(debug('Hello!'))
 
 program.run()
