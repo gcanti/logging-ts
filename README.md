@@ -1,5 +1,9 @@
 Adapted from [purescript-logging](https://github.com/rightfold/purescript-logging)
 
+# TypeScript compatibility
+
+The stable version is tested against TypeScript 3.1.6, but should run with TypeScript 2.8.0+ too
+
 # Usage
 
 From `purescript-logging`'s README
