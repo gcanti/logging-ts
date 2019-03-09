@@ -1,3 +1,8 @@
+---
+title: Home
+nav_order: 1
+---
+
 Adapted from [purescript-logging](https://github.com/rightfold/purescript-logging)
 
 # TypeScript compatibility
@@ -55,7 +60,3 @@ production.log: [Info] 2017-10-17 10:14:21 boot
 debug.log: [Debug] 2017-10-17 10:14:21 Hello!
 */
 ```
-
-# Documentation
-
-- [API Reference](https://gcanti.github.io/logging-ts)
