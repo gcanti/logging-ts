@@ -27,13 +27,14 @@
     "url": "https://github.com/gcanti/logging-ts/issues"
   },
   "homepage": "https://github.com/gcanti/logging-ts",
-  "dependencies": {
+  "peerDependencies": {
     "fp-ts": "^1.7.0"
   },
   "devDependencies": {
     "@types/jest": "^22.2.2",
     "@types/node": "8.0.19",
     "docs-ts": "0.0.1",
+    "fp-ts": "^1.19.2",
     "jest": "^22.4.3",
     "prettier": "^1.13.7",
     "ts-jest": "^22.4.2",
