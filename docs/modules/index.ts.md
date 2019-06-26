@@ -75,14 +75,14 @@ Transform the `Logger` such that it ignores records for which the predicate retu
 ```ts
 export function filter<M extends URIS3>(
   M: Applicative3<M>
-): (<A>(logger: Logger<M, A>, predicate: Predicate<A>) => Logger<M, A>)
+): <A>(logger: Logger<M, A>, predicate: Predicate<A>) => Logger<M, A>
 export function filter<M extends URIS2>(
   M: Applicative2<M>
-): (<A>(logger: Logger<M, A>, predicate: Predicate<A>) => Logger<M, A>)
+): <A>(logger: Logger<M, A>, predicate: Predicate<A>) => Logger<M, A>
 export function filter<M extends URIS>(
   M: Applicative1<M>
-): (<A>(logger: Logger<M, A>, predicate: Predicate<A>) => Logger<M, A>)
-export function filter<M>(M: Applicative<M>): (<A>(logger: Logger<M, A>, predicate: Predicate<A>) => Logger<M, A>) { ... }
+): <A>(logger: Logger<M, A>, predicate: Predicate<A>) => Logger<M, A>
+export function filter<M>(M: Applicative<M>): <A>(logger: Logger<M, A>, predicate: Predicate<A>) => Logger<M, A> { ... }
 ```
 
 # getMonoid (function)
@@ -90,10 +90,10 @@ export function filter<M>(M: Applicative<M>): (<A>(logger: Logger<M, A>, predica
 **Signature**
 
 ```ts
-export function getMonoid<M extends URIS3>(M: Applicative3<M>): (<A = never>() => Monoid<Logger<M, A>>)
-export function getMonoid<M extends URIS2>(M: Applicative2<M>): (<A = never>() => Monoid<Logger<M, A>>)
-export function getMonoid<M extends URIS>(M: Applicative1<M>): (<A = never>() => Monoid<Logger<M, A>>)
-export function getMonoid<M>(M: Applicative<M>): (<A = never>() => Monoid<Logger<M, A>>) { ... }
+export function getMonoid<M extends URIS3>(M: Applicative3<M>): <A = never>() => Monoid<Logger<M, A>>
+export function getMonoid<M extends URIS2>(M: Applicative2<M>): <A = never>() => Monoid<Logger<M, A>>
+export function getMonoid<M extends URIS>(M: Applicative1<M>): <A = never>() => Monoid<Logger<M, A>>
+export function getMonoid<M>(M: Applicative<M>): <A = never>() => Monoid<Logger<M, A>> { ... }
 ```
 
 # getSemigroup (function)
@@ -101,10 +101,10 @@ export function getMonoid<M>(M: Applicative<M>): (<A = never>() => Monoid<Logger
 **Signature**
 
 ```ts
-export function getSemigroup<M extends URIS3>(M: Apply3<M>): (<A = never>() => Semigroup<Logger<M, A>>)
-export function getSemigroup<M extends URIS2>(M: Apply2<M>): (<A = never>() => Semigroup<Logger<M, A>>)
-export function getSemigroup<M extends URIS>(M: Apply1<M>): (<A = never>() => Semigroup<Logger<M, A>>)
-export function getSemigroup<M>(M: Apply<M>): (<A = never>() => Semigroup<Logger<M, A>>) { ... }
+export function getSemigroup<M extends URIS3>(M: Apply3<M>): <A = never>() => Semigroup<Logger<M, A>>
+export function getSemigroup<M extends URIS2>(M: Apply2<M>): <A = never>() => Semigroup<Logger<M, A>>
+export function getSemigroup<M extends URIS>(M: Apply1<M>): <A = never>() => Semigroup<Logger<M, A>>
+export function getSemigroup<M>(M: Apply<M>): <A = never>() => Semigroup<Logger<M, A>> { ... }
 ```
 
 # hoist (function)

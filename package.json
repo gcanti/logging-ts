@@ -1,6 +1,6 @@
 {
   "name": "logging-ts",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Composable loggers for TypeScript",
   "files": [
     "lib"
@@ -15,6 +15,7 @@
     "test": "npm run prettier && npm run lint && npm run jest && npm run docs",
     "clean": "rm -rf lib/*",
     "build": "npm run clean && tsc",
+    "prepublish": "npm run build",
     "docs": "docs-ts"
   },
   "repository": {
@@ -33,15 +34,15 @@
   "devDependencies": {
     "@types/jest": "^22.2.2",
     "@types/node": "8.0.19",
-    "docs-ts": "0.0.1",
+    "docs-ts": "0.0.3",
     "fp-ts": "^1.19.2",
     "jest": "^22.4.3",
-    "prettier": "^1.13.7",
+    "prettier": "^1.18.2",
     "ts-jest": "^22.4.2",
     "ts-node": "3.3.0",
     "tslint": "5.9.1",
     "tslint-config-standard": "7.0.0",
-    "typescript": "^3.1.6"
+    "typescript": "^3.5.2"
   },
   "tags": [
     "typescript",
