@@ -1,8 +1,11 @@
 Adapted from [purescript-logging](https://github.com/rightfold/purescript-logging)
 
-# TypeScript compatibility
+# `fp-ts` and TypeScript compatibility
 
-The stable version is tested against TypeScript 3.1.6, but should run with TypeScript 2.8.0+ too
+| `logging-ts` version | required `fp-ts` version | required TypeScript version |
+| -------------------- | ------------------------ | --------------------------- |
+| 0.3.0 (coming soon)  | 2.0.0+                   | 3.5+                        |
+| 0.2.0                | 1.7.0+                   | 2.8.0+                      |
 
 # Usage
 
