@@ -18,10 +18,11 @@ From `purescript-logging`'s README
 > (for transforming records) and `filter` (for filtering records). An example use case might be the following:
 
 ```ts
-import { io } from 'fp-ts/lib/IO'
-import * as L from 'logging-ts'
 import * as C from 'fp-ts/lib/Console'
 import * as D from 'fp-ts/lib/Date'
+import { chain, IO } from 'fp-ts/lib/IO'
+import { pipe } from 'fp-ts/lib/pipeable'
+import * as L from '../src/IO'
 
 type Level = 'Debug' | 'Info' | 'Warning' | 'Error'
 
@@ -31,31 +32,32 @@ interface Entry {
   level: Level
 }
 
-const showEntry = (entry: Entry): string => `[${entry.level}] ${entry.time.toLocaleString()} ${entry.message}`
-
-const getEntryLogger = (prefix: string) => {
-  return new L.Logger((entry: Entry) => C.log(`${prefix}: ${showEntry(entry)}`))
+function showEntry(entry: Entry): string {
+  return `[${entry.level}] ${entry.time.toLocaleString()} ${entry.message}`
 }
 
-const filter = L.filter(io)
-const debugLogger = filter(getEntryLogger('debug.log'), e => e.level === 'Debug')
-const productionLogger = filter(getEntryLogger('production.log'), e => e.level !== 'Debug')
-const logger = L.getSemigroup(io)<Entry>().concat(debugLogger, productionLogger)
+function getLoggerEntry(prefix: string): L.IOLogger<Entry> {
+  return entry => C.log(`${prefix}: ${showEntry(entry)}`)
+}
 
-const log = L.log(logger)
+const debugLogger = L.filter(getLoggerEntry('debug.log'), e => e.level === 'Debug')
+const productionLogger = L.filter(getLoggerEntry('production.log'), e => e.level !== 'Debug')
+const logger = L.getMonoid<Entry>().concat(debugLogger, productionLogger)
 
-const info = (message: string) => (time: Date) => log({ message, time, level: 'Info' })
-const debug = (message: string) => (time: Date) => log({ message, time, level: 'Debug' })
+const info = (message: string) => (time: Date): IO<void> => logger({ message, time, level: 'Info' })
+const debug = (message: string) => (time: Date): IO<void> => logger({ message, time, level: 'Debug' })
 
-const program = D.create
-  .chain(info('boot'))
-  .chain(() => D.create)
-  .chain(debug('Hello!'))
+const program = pipe(
+  D.create,
+  chain(info('boot')),
+  chain(() => D.create),
+  chain(debug('Hello!'))
+)
 
-program.run()
+program()
 /*
-production.log: [Info] 2017-10-17 10:14:21 boot
-debug.log: [Debug] 2017-10-17 10:14:21 Hello!
+production.log: [Info] 10/4/2019, 12:44:48 PM boot
+debug.log: [Debug] 10/4/2019, 12:44:48 PM Hello!
 */
 ```
 
