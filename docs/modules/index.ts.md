@@ -1,6 +1,6 @@
 ---
 title: index.ts
-nav_order: 2
+nav_order: 1
 parent: Modules
 ---
 
@@ -8,133 +8,75 @@ parent: Modules
 
 <h2 class="text-delta">Table of contents</h2>
 
-- [URI (type alias)](#uri-type-alias)
-- [Logger (class)](#logger-class)
-  - [contramap (method)](#contramap-method)
-- [URI (constant)](#uri-constant)
-- [logger (constant)](#logger-constant)
-- [filter (function)](#filter-function)
-- [getMonoid (function)](#getmonoid-function)
-- [getSemigroup (function)](#getsemigroup-function)
-- [hoist (function)](#hoist-function)
-- [log (function)](#log-function)
+- [Logger (interface)](#logger-interface)
+- [Logger1 (interface)](#logger1-interface)
+- [LoggerM (interface)](#loggerm-interface)
+- [LoggerM1 (interface)](#loggerm1-interface)
+- [getLoggerM (function)](#getloggerm-function)
 
 ---
 
-# URI (type alias)
-
-**Signature**
-
-```ts
-export type URI = typeof URI
-```
-
-# Logger (class)
+# Logger (interface)
 
 A logger receives records and potentially performs some effects
 
 **Signature**
 
 ```ts
-export class Logger<M, A> {
-  constructor(readonly run: (a: A) => HKT<M, void>) { ... }
-  ...
+export interface Logger<M, A> {
+  (a: A): HKT<M, void>
 }
 ```
 
-## contramap (method)
+Added in v0.3.0
+
+# Logger1 (interface)
 
 **Signature**
 
 ```ts
-contramap<B>(f: (b: B) => A): Logger<M, B> { ... }
+export interface Logger1<M extends URIS, A> {
+  (a: A): Kind<M, void>
+}
 ```
 
-# URI (constant)
+Added in v0.3.0
+
+# LoggerM (interface)
 
 **Signature**
 
 ```ts
-export const URI = ...
+export interface LoggerM<M> {
+  readonly contramap: <A, B>(fa: Logger<M, A>, f: (b: B) => A) => Logger<M, B>
+  readonly filter: <A>(logger: Logger<M, A>, predicate: Predicate<A>) => Logger<M, A>
+  readonly getMonoid: <A = never>() => Monoid<Logger<M, A>>
+}
 ```
 
-# logger (constant)
+Added in v0.3.0
+
+# LoggerM1 (interface)
 
 **Signature**
 
 ```ts
-export const logger: Contravariant2<URI> = ...
+export interface LoggerM1<M extends URIS> {
+  readonly contramap: <A, B>(fa: Logger1<M, A>, f: (b: B) => A) => Logger1<M, B>
+  readonly filter: <A>(logger: Logger1<M, A>, predicate: Predicate<A>) => Logger1<M, A>
+  readonly getMonoid: <A = never>() => Monoid<Logger1<M, A>>
+}
 ```
 
-# filter (function)
+Added in v0.3.0
 
-Transform the `Logger` such that it ignores records for which the predicate returns `false`
+# getLoggerM (function)
 
 **Signature**
 
 ```ts
-export function filter<M extends URIS3>(
-  M: Applicative3<M>
-): <A>(logger: Logger<M, A>, predicate: Predicate<A>) => Logger<M, A>
-export function filter<M extends URIS2>(
-  M: Applicative2<M>
-): <A>(logger: Logger<M, A>, predicate: Predicate<A>) => Logger<M, A>
-export function filter<M extends URIS>(
-  M: Applicative1<M>
-): <A>(logger: Logger<M, A>, predicate: Predicate<A>) => Logger<M, A>
-export function filter<M>(M: Applicative<M>): <A>(logger: Logger<M, A>, predicate: Predicate<A>) => Logger<M, A> { ... }
+export function getLoggerM<M extends URIS>(M: Applicative1<M>): LoggerM1<M>
+export function getLoggerM<M>(M: Applicative<M>): LoggerM<M> { ... }
 ```
 
-# getMonoid (function)
-
-**Signature**
-
-```ts
-export function getMonoid<M extends URIS3>(M: Applicative3<M>): <A = never>() => Monoid<Logger<M, A>>
-export function getMonoid<M extends URIS2>(M: Applicative2<M>): <A = never>() => Monoid<Logger<M, A>>
-export function getMonoid<M extends URIS>(M: Applicative1<M>): <A = never>() => Monoid<Logger<M, A>>
-export function getMonoid<M>(M: Applicative<M>): <A = never>() => Monoid<Logger<M, A>> { ... }
-```
-
-# getSemigroup (function)
-
-**Signature**
-
-```ts
-export function getSemigroup<M extends URIS3>(M: Apply3<M>): <A = never>() => Semigroup<Logger<M, A>>
-export function getSemigroup<M extends URIS2>(M: Apply2<M>): <A = never>() => Semigroup<Logger<M, A>>
-export function getSemigroup<M extends URIS>(M: Apply1<M>): <A = never>() => Semigroup<Logger<M, A>>
-export function getSemigroup<M>(M: Apply<M>): <A = never>() => Semigroup<Logger<M, A>> { ... }
-```
-
-# hoist (function)
-
-Apply a natural transformation to the underlying functor
-
-**Signature**
-
-```ts
-export function hoist<F extends URIS3, G extends URIS3>(
-  nt: <U, L, A>(fa: Type3<F, U, L, A>) => Type3<G, U, L, A>
-): <A>(logger: Logger<F, A>) => Logger<G, A>
-export function hoist<F extends URIS2, G extends URIS2>(
-  nt: <L, A>(fa: Type2<F, L, A>) => Type2<G, L, A>
-): <A>(logger: Logger<F, A>) => Logger<G, A>
-export function hoist<F extends URIS, G extends URIS>(
-  nt: <A>(fa: Type<F, A>) => Type<G, A>
-): <A>(logger: Logger<F, A>) => Logger<G, A>
-export function hoist<F, G>(nt: <A>(fa: HKT<F, A>) => HKT<G, A>): <A>(logger: Logger<F, A>) => Logger<G, A> { ... }
-```
-
-# log (function)
-
-Log a record to the logger
-
-**Signature**
-
-```ts
-export function log<M extends URIS3, A>(logger: Logger<M, A>): <U, L>(a: A) => Type3<M, U, L, void>
-export function log<M extends URIS2, A>(logger: Logger<M, A>): <L>(a: A) => Type2<M, L, void>
-export function log<M extends URIS, A>(logger: Logger<M, A>): (a: A) => Type<M, void>
-export function log<M, A>(logger: Logger<M, A>): (a: A) => HKT<M, void> { ... }
-```
+Added in v0.3.0
