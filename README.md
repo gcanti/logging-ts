@@ -4,7 +4,7 @@ Adapted from [purescript-logging](https://github.com/rightfold/purescript-loggin
 
 | `logging-ts` version | required `fp-ts` version | required TypeScript version |
 | -------------------- | ------------------------ | --------------------------- |
-| 0.3.0 (coming soon)  | 2.0.0+                   | 3.5+                        |
+| 0.3.0                | 2.0.0+                   | 3.5+                        |
 | 0.2.0                | 1.7.0+                   | 2.8.0+                      |
 
 # Usage
@@ -36,7 +36,7 @@ function showEntry(entry: Entry): string {
   return `[${entry.level}] ${entry.time.toLocaleString()} ${entry.message}`
 }
 
-function getLoggerEntry(prefix: string): L.IOLogger<Entry> {
+function getLoggerEntry(prefix: string): L.LoggerIO<Entry> {
   return entry => C.log(`${prefix}: ${showEntry(entry)}`)
 }
 
