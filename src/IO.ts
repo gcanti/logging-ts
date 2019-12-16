@@ -1,3 +1,6 @@
+/**
+ * @since 0.3.0
+ */
 import { Contravariant1 } from 'fp-ts/lib/Contravariant'
 import { Predicate } from 'fp-ts/lib/function'
 import { IO, io } from 'fp-ts/lib/IO'

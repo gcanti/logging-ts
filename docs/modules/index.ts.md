@@ -4,6 +4,12 @@ nav_order: 1
 parent: Modules
 ---
 
+# index overview
+
+Adapted from https://github.com/rightfold/purescript-logging
+
+Added in v0.3.0
+
 ---
 
 <h2 class="text-delta">Table of contents</h2>
