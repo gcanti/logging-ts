@@ -1,9 +1,12 @@
+/**
+ * Adapted from https://github.com/rightfold/purescript-logging
+ *
+ * @since 0.3.0
+ */
 import { Applicative, Applicative1 } from 'fp-ts/lib/Applicative'
 import { Predicate } from 'fp-ts/lib/function'
 import { HKT, Kind, URIS } from 'fp-ts/lib/HKT'
 import { Monoid } from 'fp-ts/lib/Monoid'
-
-// Adapted from https://github.com/rightfold/purescript-logging
 
 /**
  * A logger receives records and potentially performs some effects
