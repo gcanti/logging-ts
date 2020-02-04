@@ -34,7 +34,7 @@
   "devDependencies": {
     "@types/jest": "^22.2.2",
     "@types/node": "^12.6.8",
-    "docs-ts": "^0.3.0",
+    "docs-ts": "^0.3.4",
     "fp-ts": "^2.0.5",
     "jest": "^24.8.0",
     "prettier": "^1.19.1",

@@ -14,11 +14,11 @@ Added in v0.3.0
 
 - [LoggerIO (interface)](#loggerio-interface)
 - [URI (type alias)](#uri-type-alias)
-- [URI (constant)](#uri-constant)
-- [filter (constant)](#filter-constant)
-- [getMonoid (constant)](#getmonoid-constant)
-- [loggerIO (constant)](#loggerio-constant)
-- [contramap (export)](#contramap-export)
+- [URI](#uri)
+- [contramap](#contramap)
+- [filter](#filter)
+- [getMonoid](#getmonoid)
+- [loggerIO](#loggerio)
 
 ---
 
@@ -44,7 +44,7 @@ export type URI = typeof URI
 
 Added in v0.3.0
 
-# URI (constant)
+# URI
 
 **Signature**
 
@@ -54,7 +54,17 @@ export const URI: "LoggerIO" = ...
 
 Added in v0.3.0
 
-# filter (constant)
+# contramap
+
+**Signature**
+
+```ts
+<A, B>(f: (b: B) => A) => (fa: LoggerIO<A>) => LoggerIO<B>
+```
+
+Added in v0.3.0
+
+# filter
 
 **Signature**
 
@@ -64,32 +74,22 @@ export const filter: <A>(logger: LoggerIO<A>, predicate: Predicate<A>) => Logger
 
 Added in v0.3.0
 
-# getMonoid (constant)
+# getMonoid
 
 **Signature**
 
 ```ts
-export const getMonoid: <A = ...
+export const getMonoid: <A = never>() => Monoid<LoggerIO<A>> = ...
 ```
 
 Added in v0.3.0
 
-# loggerIO (constant)
+# loggerIO
 
 **Signature**
 
 ```ts
 export const loggerIO: Contravariant1<URI> = ...
-```
-
-Added in v0.3.0
-
-# contramap (export)
-
-**Signature**
-
-```ts
-<A, B>(f: (b: B) => A) => (fa: LoggerIO<A>) => LoggerIO<B>
 ```
 
 Added in v0.3.0

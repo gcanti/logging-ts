@@ -18,7 +18,7 @@ Added in v0.3.0
 - [Logger1 (interface)](#logger1-interface)
 - [LoggerM (interface)](#loggerm-interface)
 - [LoggerM1 (interface)](#loggerm1-interface)
-- [getLoggerM (function)](#getloggerm-function)
+- [getLoggerM](#getloggerm)
 
 ---
 
@@ -76,7 +76,7 @@ export interface LoggerM1<M extends URIS> {
 
 Added in v0.3.0
 
-# getLoggerM (function)
+# getLoggerM
 
 **Signature**
 
