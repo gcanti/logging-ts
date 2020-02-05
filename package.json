@@ -1,20 +1,25 @@
 {
   "name": "logging-ts",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "Composable loggers for TypeScript",
   "files": [
-    "lib"
+    "lib",
+    "es6"
   ],
   "main": "lib/index.js",
+  "module": "es6/index.js",
   "typings": "lib/index.d.ts",
+  "sideEffects": false,
   "scripts": {
-    "lint": "tslint -p tsconfig.json src/**/*.ts test/**/*.ts",
+    "lint": "tslint -p .",
     "jest": "jest",
     "prettier": "prettier --no-semi --single-quote --print-width 120 --parser typescript --list-different \"{src,test}/**/*.ts\"",
     "fix-prettier": "prettier --no-semi --single-quote --print-width 120 --parser typescript --write \"{src,test}/**/*.ts\"",
-    "test": "npm run prettier && npm run lint && npm run jest && npm run docs",
-    "clean": "rm -rf lib/*",
-    "build": "npm run clean && tsc",
+    "test": "npm run prettier && npm run jest && npm run docs",
+    "clean": "rm -rf ./lib ./es6",
+    "prebuild": "npm run clean",
+    "build": "tsc -p ./tsconfig.build.json && tsc -p ./tsconfig.build-es6.json",
+    "postbuild": "import-path-rewrite && prettier --write \"./{lib,es6}/**/*.ts\"",
     "prepublish": "npm run build",
     "docs": "docs-ts"
   },
@@ -36,6 +41,7 @@
     "@types/node": "^12.6.8",
     "docs-ts": "^0.3.4",
     "fp-ts": "^2.0.5",
+    "import-path-rewrite": "github:gcanti/import-path-rewrite",
     "jest": "^24.8.0",
     "prettier": "^1.19.1",
     "ts-jest": "^24.0.2",
