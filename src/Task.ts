@@ -1,3 +1,7 @@
+/**
+ * @since 0.3.1
+ */
+
 import { Contravariant1 } from 'fp-ts/lib/Contravariant'
 import { Predicate } from 'fp-ts/lib/function'
 import { Task, task } from 'fp-ts/lib/Task'
@@ -14,18 +18,36 @@ declare module 'fp-ts/lib/HKT' {
   }
 }
 
+/**
+ * @since 0.3.1
+ */
 export const URI = 'LoggerTask'
 
+/**
+ * @since 0.3.1
+ */
 export type URI = typeof URI
 
+/**
+ * @since 0.3.1
+ */
 export interface LoggerTask<A> {
   (a: A): Task<void>
 }
 
+/**
+ * @since 0.3.1
+ */
 export const filter: <A>(logger: LoggerTask<A>, predicate: Predicate<A>) => LoggerTask<A> = T.filter
 
+/**
+ * @since 0.3.1
+ */
 export const getMonoid: <A = never>() => Monoid<LoggerTask<A>> = T.getMonoid
 
+/**
+ * @since 0.3.1
+ */
 export const loggerTask: Contravariant1<URI> = {
   URI,
   contramap: T.contramap
