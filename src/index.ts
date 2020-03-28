@@ -3,9 +3,9 @@
  *
  * @since 0.3.0
  */
-import { Applicative, Applicative1 } from 'fp-ts/lib/Applicative'
+import { Applicative, Applicative1, Applicative2 } from 'fp-ts/lib/Applicative'
 import { Predicate } from 'fp-ts/lib/function'
-import { HKT, Kind, URIS } from 'fp-ts/lib/HKT'
+import { HKT, Kind, URIS, URIS2, Kind2 } from 'fp-ts/lib/HKT'
 import { Monoid } from 'fp-ts/lib/Monoid'
 
 /**
@@ -42,9 +42,20 @@ export interface LoggerM1<M extends URIS> {
   readonly getMonoid: <A = never>() => Monoid<Logger1<M, A>>
 }
 
+export interface Logger2<M extends URIS2, E, A> {
+  (a: A): Kind2<M, E, void>
+}
+
+export interface LoggerM2<M extends URIS2> {
+  readonly contramap: <E, A, B>(fa: Logger2<M, E, A>, f: (b: B) => A) => Logger2<M, E, B>
+  readonly filter: <E, A>(logger: Logger2<M, E, A>, predicate: Predicate<A>) => Logger2<M, E, A>
+  readonly getMonoid: <E, A>() => Monoid<Logger2<M, E, A>>
+}
+
 /**
  * @since 0.3.0
  */
+export function getLoggerM<M extends URIS2>(M: Applicative2<M>): LoggerM2<M>
 export function getLoggerM<M extends URIS>(M: Applicative1<M>): LoggerM1<M>
 export function getLoggerM<M>(M: Applicative<M>): LoggerM<M>
 export function getLoggerM<M>(M: Applicative<M>): LoggerM<M> {
