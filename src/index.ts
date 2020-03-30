@@ -42,10 +42,16 @@ export interface LoggerM1<M extends URIS> {
   readonly getMonoid: <A = never>() => Monoid<Logger1<M, A>>
 }
 
+/**
+ * @since 0.3.3
+ */
 export interface Logger2<M extends URIS2, E, A> {
   (a: A): Kind2<M, E, void>
 }
 
+/**
+ * @since 0.3.3
+ */
 export interface LoggerM2<M extends URIS2> {
   readonly contramap: <E, A, B>(fa: Logger2<M, E, A>, f: (b: B) => A) => Logger2<M, E, B>
   readonly filter: <E, A>(logger: Logger2<M, E, A>, predicate: Predicate<A>) => Logger2<M, E, A>

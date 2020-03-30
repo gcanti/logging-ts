@@ -16,8 +16,10 @@ Added in v0.3.0
 
 - [Logger (interface)](#logger-interface)
 - [Logger1 (interface)](#logger1-interface)
+- [Logger2 (interface)](#logger2-interface)
 - [LoggerM (interface)](#loggerm-interface)
 - [LoggerM1 (interface)](#loggerm1-interface)
+- [LoggerM2 (interface)](#loggerm2-interface)
 - [getLoggerM](#getloggerm)
 
 ---
@@ -48,6 +50,18 @@ export interface Logger1<M extends URIS, A> {
 
 Added in v0.3.0
 
+# Logger2 (interface)
+
+**Signature**
+
+```ts
+export interface Logger2<M extends URIS2, E, A> {
+  (a: A): Kind2<M, E, void>
+}
+```
+
+Added in v0.3.3
+
 # LoggerM (interface)
 
 **Signature**
@@ -76,11 +90,26 @@ export interface LoggerM1<M extends URIS> {
 
 Added in v0.3.0
 
+# LoggerM2 (interface)
+
+**Signature**
+
+```ts
+export interface LoggerM2<M extends URIS2> {
+  readonly contramap: <E, A, B>(fa: Logger2<M, E, A>, f: (b: B) => A) => Logger2<M, E, B>
+  readonly filter: <E, A>(logger: Logger2<M, E, A>, predicate: Predicate<A>) => Logger2<M, E, A>
+  readonly getMonoid: <E, A>() => Monoid<Logger2<M, E, A>>
+}
+```
+
+Added in v0.3.3
+
 # getLoggerM
 
 **Signature**
 
 ```ts
+export function getLoggerM<M extends URIS2>(M: Applicative2<M>): LoggerM2<M>
 export function getLoggerM<M extends URIS>(M: Applicative1<M>): LoggerM1<M>
 export function getLoggerM<M>(M: Applicative<M>): LoggerM<M> { ... }
 ```
