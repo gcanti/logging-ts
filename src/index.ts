@@ -67,10 +67,10 @@ export function getLoggerM<M>(M: Applicative<M>): LoggerM<M>
 export function getLoggerM<M>(M: Applicative<M>): LoggerM<M> {
   const empty = () => M.of(undefined)
   return {
-    contramap: (fa, f) => b => fa(f(b)),
-    filter: (ma, predicate) => a => (predicate(a) ? ma(a) : M.of(undefined)),
+    contramap: (fa, f) => (b) => fa(f(b)),
+    filter: (ma, predicate) => (a) => (predicate(a) ? ma(a) : M.of(undefined)),
     getMonoid: () => ({
-      concat: (x, y) => a =>
+      concat: (x, y) => (a) =>
         M.ap(
           M.map(x(a), () => () => undefined),
           y(a)
