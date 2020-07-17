@@ -62,9 +62,10 @@ export const loggerIO: Contravariant1<URI> = {
  * @since 0.3.3
  *
  * @example
- * import { pipe, flow } from 'fp-ts/lib/function'
+ * import { pipe } from 'fp-ts/lib/pipeable'
  * import * as TE from 'fp-ts/lib/TaskEither'
  * import * as C from 'fp-ts/lib/Console'
+ * import { withLogger } from 'logging-ts/lib/IO'
  *
  * // parts of the program
  * declare const read: (path: string) => TE.TaskEither<Error, string>
@@ -92,6 +93,7 @@ export const loggerIO: Contravariant1<URI> = {
  *   log(() => 'contents reversed'),
  *   TE.chain(write('out')),
  *   log(() => 'file has been saved!')
+ * )
  */
 export function withLogger<M extends URIS3>(
   M: MonadIO3<M>
