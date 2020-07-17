@@ -59,7 +59,7 @@ export const loggerIO: Contravariant1<URI> = {
  *
  * @category Combinator
  *
- * @since 0.3.3
+ * @since 0.3.4
  *
  * @example
  * import { pipe } from 'fp-ts/lib/pipeable'
