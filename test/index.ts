@@ -1,7 +1,7 @@
 import * as assert from 'assert'
 import * as C from 'fp-ts/lib/Console'
 import * as L from '../src/IO'
-import { withLogger } from '../src'
+import { withLogger } from '../src/IO'
 import * as IO from 'fp-ts/lib/IO'
 import { pipe } from 'fp-ts/lib/pipeable'
 import * as T from 'fp-ts/lib/Task'
