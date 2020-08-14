@@ -54,46 +54,27 @@ export const loggerIO: Contravariant1<URI> = {
 }
 
 /**
- * Takes a `MonadIO` then a `LoggerIO`,
- * which lifts the `message` to the `LoggerIO` within `MonadIO` and calls the Logger at that point in time.
- *
  * @category Combinator
  *
  * @since 0.3.4
  *
  * @example
  * import { pipe } from 'fp-ts/lib/pipeable'
- * import * as TE from 'fp-ts/lib/TaskEither'
+ * import * as IO from 'fp-ts/lib/IO'
  * import * as C from 'fp-ts/lib/Console'
  * import { withLogger } from 'logging-ts/lib/IO'
+ * import { equal } from 'assert'
  *
- * // parts of the program
- * declare const read: (path: string) => TE.TaskEither<Error, string>
- * declare const parse: (content: string) => TE.TaskEither<Error, string>
- * declare const reverse: (content: string) => TE.TaskEither<Error, string>
- * declare const write: (path: string) => (content: string) => TE.TaskEither<Error, void>
+ * const log = withLogger(IO.io)(C.log)
  *
- * // program without logging
- * export const program = pipe(
- *   read('in'),
- *   TE.chain(parse),
- *   TE.chain(reverse),
- *   TE.chain(write('out'))
+ * const result = pipe(
+ *   IO.of(3),
+ *   log(n => `lifted "${n}" to the IO monad`), // n === 3
+ *   IO.map(n => n * n),
+ *   log(n => `squared the value, which is "${n}"`), // n === 9
  * )
  *
- * const log = withLogger(TE.taskEither)(C.log)
- *
- * // program with logging
- * export const programWithLogging = pipe(
- *   read('in'),
- *   log(() => 'file accessed!'),
- *   TE.chain(parse),
- *   log(() => 'file contents parsed!'),
- *   TE.chain(reverse),
- *   log(() => 'contents reversed'),
- *   TE.chain(write('out')),
- *   log(() => 'file has been saved!')
- * )
+ * equal(result(), 9)
  */
 export function withLogger<M extends URIS3>(
   M: MonadIO3<M>
