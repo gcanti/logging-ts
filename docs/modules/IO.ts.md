@@ -19,6 +19,7 @@ Added in v0.3.0
 - [filter](#filter)
 - [getMonoid](#getmonoid)
 - [loggerIO](#loggerio)
+- [withLogger](#withlogger)
 
 ---
 
@@ -93,3 +94,48 @@ export const loggerIO: Contravariant1<URI> = ...
 ```
 
 Added in v0.3.0
+
+# withLogger
+
+**Signature**
+
+```ts
+export function withLogger<M extends URIS3>(
+  M: MonadIO3<M>
+): <B>(logger: LoggerIO<B>) => <A>(message: (a: A) => B) => <R, E>(ma: Kind3<M, R, E, A>) => Kind3<M, R, E, A>
+export function withLogger<M extends URIS2, E>(
+  M: MonadIO2C<M, E>
+): <B>(logger: LoggerIO<B>) => <A>(message: (a: A) => B) => (ma: Kind2<M, E, A>) => Kind2<M, E, A>
+export function withLogger<M extends URIS2>(
+  M: MonadIO2<M>
+): <B>(logger: LoggerIO<B>) => <A>(message: (a: A) => B) => <E>(ma: Kind2<M, E, A>) => Kind2<M, E, A>
+export function withLogger<M extends URIS>(
+  M: MonadIO1<M>
+): <B>(logger: LoggerIO<B>) => <A>(message: (a: A) => B) => (ma: Kind<M, A>) => Kind<M, A>
+export function withLogger<M>(
+  M: MonadIO<M>
+): <B>(logger: LoggerIO<B>) => <A>(message: (a: A) => B) => (ma: HKT<M, A>) => HKT<M, A> { ... }
+```
+
+**Example**
+
+```ts
+import { pipe } from 'fp-ts/lib/pipeable'
+import * as IO from 'fp-ts/lib/IO'
+import * as C from 'fp-ts/lib/Console'
+import { withLogger } from 'logging-ts/lib/IO'
+import { equal } from 'assert'
+
+const log = withLogger(IO.io)(C.log)
+
+const result = pipe(
+  IO.of(3),
+  log(n => `lifted "${n}" to the IO monad`), // n === 3
+  IO.map(n => n * n),
+  log(n => `squared the value, which is "${n}"`) // n === 9
+)
+
+equal(result(), 9)
+```
+
+Added in v0.3.4
