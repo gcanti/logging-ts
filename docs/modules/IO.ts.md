@@ -103,12 +103,12 @@ Added in v0.3.0
 export function withLogger<M extends URIS3>(
   M: MonadIO3<M>
 ): <B>(logger: LoggerIO<B>) => <A>(message: (a: A) => B) => <R, E>(ma: Kind3<M, R, E, A>) => Kind3<M, R, E, A>
-export function withLogger<M extends URIS2, E>(
-  M: MonadIO2C<M, E>
-): <B>(logger: LoggerIO<B>) => <A>(message: (a: A) => B) => (ma: Kind2<M, E, A>) => Kind2<M, E, A>
 export function withLogger<M extends URIS2>(
   M: MonadIO2<M>
 ): <B>(logger: LoggerIO<B>) => <A>(message: (a: A) => B) => <E>(ma: Kind2<M, E, A>) => Kind2<M, E, A>
+export function withLogger<M extends URIS2, E>(
+  M: MonadIO2C<M, E>
+): <B>(logger: LoggerIO<B>) => <A>(message: (a: A) => B) => (ma: Kind2<M, E, A>) => Kind2<M, E, A>
 export function withLogger<M extends URIS>(
   M: MonadIO1<M>
 ): <B>(logger: LoggerIO<B>) => <A>(message: (a: A) => B) => (ma: Kind<M, A>) => Kind<M, A>
